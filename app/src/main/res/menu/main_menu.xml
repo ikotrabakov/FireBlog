@@ -5,5 +5,8 @@
         android:icon="@mipmap/ic_add_white_24dp"
         android:title="Add Post"
         app:showAsAction="always"/>
+    <item android:id="@+id/action_settings"
+        android:title="Settings"
+        app:showAsAction="never"/>
 
 </menu>
