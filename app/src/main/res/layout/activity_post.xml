@@ -16,18 +16,18 @@
         android:layout_centerHorizontal="true"
         android:scaleType="centerCrop"
         android:adjustViewBounds="true"
-        android:contentDescription=""
+        android:contentDescription="Add a image for the post"
         tools:ignore="ContentDescription" />
 
     <Button
         android:text="@string/submit_post"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/button2"
         android:background="@color/colorPrimary"
         android:textColor="#ffffff"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:id="@+id/submitBtn" />
 
     <EditText
         android:layout_width="match_parent"
@@ -37,7 +37,7 @@
         android:layout_below="@+id/add_image"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:id="@+id/editText"
+        android:id="@+id/titleField"
         android:background="@drawable/input_outline"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
@@ -50,13 +50,13 @@
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
         android:ems="10"
-        android:layout_below="@+id/editText"
+        android:layout_below="@+id/titleField"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:id="@+id/editText2"
         android:background="@drawable/input_outline"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
         android:hint="@string/et_post_description"
-        android:padding="10dp" />
+        android:padding="10dp"
+        android:id="@+id/descField" />
 </RelativeLayout>
