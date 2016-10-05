@@ -12,17 +12,24 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView mBlogList;
     private DatabaseReference mDatabase;
+    private DatabaseReference mDatabaseUsers;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
@@ -43,6 +50,11 @@ public class MainActivity extends AppCompatActivity {
         };
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Blog");
+        mDatabaseUsers = FirebaseDatabase.getInstance().getReference().child("Users");
+
+        mDatabase.keepSynced(true);
+        mDatabaseUsers.keepSynced(true);
+
         mBlogList = (RecyclerView) findViewById(R.id.blog_list);
         mBlogList.setHasFixedSize(true);
         mBlogList.setLayoutManager(new LinearLayoutManager(this));
@@ -51,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
+        checkUserExist();
 
         mAuth.addAuthStateListener(mAuthListener);
 
@@ -71,6 +85,26 @@ public class MainActivity extends AppCompatActivity {
 
         mBlogList.setAdapter(firebaseRecyclerAdapter);
 
+    }
+
+    private void checkUserExist() {
+        final String userId = mAuth.getCurrentUser().getUid();
+        mDatabaseUsers.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(!dataSnapshot.hasChild(userId)) {
+                    Intent setupIntent = new Intent(MainActivity.this, SetupActivity.class);
+                    setupIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(setupIntent);
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
@@ -113,9 +147,19 @@ public class MainActivity extends AppCompatActivity {
             post_desc.setText(desc);
         }
 
-        public  void setImage(Context ctx, String image) {
-            ImageView post_image = (ImageView) mView.findViewById(R.id.post_image);
-            Picasso.with(ctx).load(image).into(post_image);
+        public  void setImage(final Context ctx, final String image) {
+            final ImageView post_image = (ImageView) mView.findViewById(R.id.post_image);
+            Picasso.with(ctx).load(image).networkPolicy(NetworkPolicy.OFFLINE).into(post_image, new Callback() {
+                @Override
+                public void onSuccess() {
+
+                }
+
+                @Override
+                public void onError() {
+                    Picasso.with(ctx).load(image).into(post_image);
+                }
+            });
         }
     }
 }

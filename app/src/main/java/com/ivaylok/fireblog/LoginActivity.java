@@ -1,5 +1,6 @@
 package com.ivaylok.fireblog;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -26,7 +27,9 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mLoginPasswordField;
     private Button mLoginBtn;
     private Button mCreateNewBtn;
-    private DatabaseReference mDatabase;
+    private DatabaseReference mDatabaseUsers;
+
+    private ProgressDialog mProgress;
 
     private FirebaseAuth mAuth;
 
@@ -37,9 +40,11 @@ public class LoginActivity extends AppCompatActivity {
 
         mLoginEmailField = (EditText) findViewById(R.id.loginEmailField);
         mLoginPasswordField = (EditText) findViewById(R.id.loginPasswordField);
+        mProgress = new ProgressDialog(this);
 
         mAuth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
+        mDatabaseUsers = FirebaseDatabase.getInstance().getReference().child("Users");
+        mDatabaseUsers.keepSynced(true);
 
         mLoginBtn = (Button) findViewById(R.id.loginBtn);
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
@@ -55,12 +60,18 @@ public class LoginActivity extends AppCompatActivity {
         String password = mLoginPasswordField.getText().toString().trim();
 
         if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
+
+            mProgress.setMessage("Checking Login");
+            mProgress.show();
+
             mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
+                        mProgress.dismiss();
                         checkUserExist();
                     } else {
+                        mProgress.dismiss();
                         Toast.makeText(LoginActivity.this, "Error Login ", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -70,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void checkUserExist() {
         final String userId = mAuth.getCurrentUser().getUid();
-        mDatabase.addValueEventListener(new ValueEventListener() {
+        mDatabaseUsers.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.hasChild(userId)) {
@@ -79,7 +90,9 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(registerIntent);
 
                 } else {
-                    Toast.makeText(LoginActivity.this, "You need to setup your account.", Toast.LENGTH_SHORT).show();
+                    Intent setupIntent = new Intent(LoginActivity.this, SetupActivity.class);
+                    setupIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(setupIntent);
                 }
             }
 
