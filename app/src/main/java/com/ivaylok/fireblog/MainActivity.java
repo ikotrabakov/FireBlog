@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
                 viewHolder.setTitle(model.getTitle());
                 viewHolder.setDesc(model.getDesc());
                 viewHolder.setImage(getApplicationContext() ,model.getImage());
+                viewHolder.setUsername(model.getUsername());
             }
         };
 
@@ -137,6 +138,11 @@ public class MainActivity extends AppCompatActivity {
         public BlogViewHolder(View itemView) {
             super(itemView);
             mView = itemView;
+        }
+
+        public void setUsername(String username) {
+            TextView post_username = (TextView) mView.findViewById(R.id.post_username);
+            post_username.setText(username);
         }
 
         public void setTitle(String title) {
