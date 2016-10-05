@@ -26,7 +26,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mLoginEmailField;
     private EditText mLoginPasswordField;
     private Button mLoginBtn;
-    private Button mCreateNewBtn;
+    private Button mLoginAccountBtn;
     private DatabaseReference mDatabaseUsers;
 
     private ProgressDialog mProgress;
@@ -40,6 +40,16 @@ public class LoginActivity extends AppCompatActivity {
 
         mLoginEmailField = (EditText) findViewById(R.id.loginEmailField);
         mLoginPasswordField = (EditText) findViewById(R.id.loginPasswordField);
+
+        mLoginAccountBtn = (Button) findViewById(R.id.loginAccountBtn);
+        mLoginAccountBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent registerIntent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(registerIntent);
+            }
+        });
+
         mProgress = new ProgressDialog(this);
 
         mAuth = FirebaseAuth.getInstance();
@@ -85,9 +95,10 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.hasChild(userId)) {
-                    Intent registerIntent = new Intent(LoginActivity.this, RegisterActivity.class);
-                    registerIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(registerIntent);
+
+                    Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
+                    mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(mainIntent);
 
                 } else {
                     Intent setupIntent = new Intent(LoginActivity.this, SetupActivity.class);

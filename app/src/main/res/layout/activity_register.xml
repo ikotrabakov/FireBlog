@@ -23,22 +23,22 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
         android:ems="10"
         android:id="@+id/emailField"
         android:layout_below="@+id/nameField"
         android:layout_alignStart="@+id/nameField"
-        android:hint="Email ..." />
+        android:hint="Email ..."
+        android:inputType="textEmailAddress" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
         android:ems="10"
         android:id="@+id/passwordField"
         android:layout_below="@+id/emailField"
         android:layout_alignStart="@+id/emailField"
-        android:hint="Password ..." />
+        android:hint="Password ..."
+        android:inputType="textPassword" />
 
     <Button
         android:text="Sign Up"
