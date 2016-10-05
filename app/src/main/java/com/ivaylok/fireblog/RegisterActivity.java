@@ -1,11 +1,11 @@
 package com.ivaylok.fireblog;
 
+
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.provider.ContactsContract;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -27,10 +27,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private ProgressDialog mProgress;
     private DatabaseReference mDatabase;
-
     private FirebaseAuth mAuth;
-
-    //    TODO there is something wrong with the database
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +42,7 @@ public class RegisterActivity extends AppCompatActivity {
         mProgress = new ProgressDialog(this);
 
         mAuth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("users");
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
 
         mRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,9 +68,9 @@ public class RegisterActivity extends AppCompatActivity {
                     if(task.isSuccessful()) {
                         String userId = mAuth.getCurrentUser().getUid();
 
-                        DatabaseReference currentuserDb = mDatabase.child(userId);
-                        currentuserDb.child("name").setValue(name);
-                        currentuserDb.child("image").setValue("default");
+                        DatabaseReference currentUserDb = mDatabase.child(userId);
+                        currentUserDb.child("name").setValue(name);
+                        currentUserDb.child("image").setValue("default");
 
                         mProgress.dismiss();
 
