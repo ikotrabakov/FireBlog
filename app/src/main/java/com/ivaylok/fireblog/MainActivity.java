@@ -27,6 +27,7 @@ import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String POST_KEY = "postKey";
     private RecyclerView mBlogList;
     private DatabaseReference mDatabase;
     private DatabaseReference mDatabaseUsers;
@@ -77,10 +78,21 @@ public class MainActivity extends AppCompatActivity {
             @Override
             protected void populateViewHolder(BlogViewHolder viewHolder, Blog model, int position) {
 
+                final String post_key = getRef(position).getKey();
+
                 viewHolder.setTitle(model.getTitle());
                 viewHolder.setDesc(model.getDesc());
                 viewHolder.setImage(getApplicationContext() ,model.getImage());
                 viewHolder.setUsername(model.getUsername());
+
+                viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent detailActivity = new Intent(MainActivity.this, DetailActivity.class);
+                        detailActivity.putExtra(POST_KEY, post_key);
+                        startActivity(detailActivity);
+                    }
+                });
             }
         };
 
